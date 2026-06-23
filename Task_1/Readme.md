@@ -37,84 +37,14 @@
     Информация о ТМЦ и закупках оборудования
 
 #### Диаграммы потоков данных
-```mermaid
-flowchart LR
-    classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
-    classDef entity fill:#124221, stroke:#000, stroke-width:4px
-    pacient[Пациент]:::entity
-    admin[Администратор]:::entity
-    xls_share[Хранилище файлов XLS / Patients]:::entity
-    register([Регистрация пациента в системе]):::action
-    get([Получает данные]):::action
-    pacient--"ПД"--> get--"ПД"--> admin --"ПД"--> register--"ПД"-->xls_share
-```
 
 ```mermaid
 flowchart LR
     classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
     classDef entity fill:#124221, stroke:#000, stroke-width:4px
-    pacient[Пациент]:::entity
-    admin[Администратор]:::entity    
-    scan([Сканирование]):::action
-    get([Получает данные]):::action
-    file_share[Хранилище отсканированных файлов]:::entity
-    pacient--"Документы"--> get--"Документы"--> admin --"Документы"--> scan--"Отсканированные документы"-->file_share
-```
-
-```mermaid
-flowchart LR
-    classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
-    classDef entity fill:#124221, stroke:#000, stroke-width:4px
-    pacient[Пациент]:::entity
-    admin[Администратор]:::entity
-    xls_share[Хранилище файлов XLS]:::entity
-    register([Регистрация в системе]):::action
-    get([Получает данные]):::action
-    pacient--"Доп.данные"--> get--"Доп.данные"--> admin --"Доп.данные"--> register--"Доп.данные"-->xls_share    
-```
-
-```mermaid
-flowchart LR
-    classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
-    classDef entity fill:#124221, stroke:#000, stroke-width:4px
-    pacient[Пациент]:::entity
-    doctor[Врач]:::entity
-    xls_share[Хранилище файлов XLS / Patients]:::entity
-    consult([Приём у врача]):::action
-    register([Регистрация в системе]):::action
-    pacient--"Данные о здоровье"--> consult--"Данные о здоровье"--> doctor--"Данные о здоровье"--> register--"Данные о здоровье"-->xls_share
-```
-
-```mermaid
-flowchart LR
-    classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
-    classDef entity fill:#124221, stroke:#000, stroke-width:4px
-    pacient[Пациент]:::entity
-    admin[Администратор]:::entity
-    xls_share[Хранилище файлов XLS / journal.xls]:::entity
-    register([Запись пациента к специалисту]):::action
-    get([Получает данные]):::action
-    pacient--"ПД"--> get--"ПД"--> admin --"ПД"--> register--"ПД"-->xls_share
-```
-
-```mermaid
-flowchart LR
-    classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
-    classDef entity fill:#124221, stroke:#000, stroke-width:4px
+    classDef share fill:#FF7777 , stroke:#000, stroke-width:4px
     
-    xls_share[Хранилище файлов XLS / journal.xls]:::entity
-    edit([Просмотр и редактирование своего жунала]):::action
-    doctor[Врач]:::entity    
-    doctor--"ПД"--> edit--"ПД"--> xls_share
-```
-
-
-```mermaid
-flowchart LR
-    classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
-    classDef entity fill:#124221, stroke:#000, stroke-width:4px
-    
-    xls_share[Хранилище файлов XLS / journal.xls]:::entity
+    xls_share[Хранилище файлов XLS / journal.xls]:::share
     edit([Сохраняет результаты анализа пациентов]):::action
     doctor[Лаборант]:::entity    
     doctor--"результаты анализов"--> edit--"результаты анализов"--> xls_share
@@ -124,8 +54,21 @@ flowchart LR
 flowchart LR
     classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
     classDef entity fill:#124221, stroke:#000, stroke-width:4px
+    classDef share fill:#FF7777 , stroke:#000, stroke-width:4px
     
-    xls_share[Хранилище файлов XLS / анализы]:::entity
+    xls_share[Хранилище файлов XLS / journal.xls]:::share
+    edit([Просмотр и редактирование своего жунала]):::action
+    doctor[Врач]:::entity    
+    doctor--"ПД"--> edit--"ПД"--> xls_share
+```
+
+```mermaid
+flowchart LR
+    classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
+    classDef entity fill:#124221, stroke:#000, stroke-width:4px
+    classDef share fill:#FF7777 , stroke:#000, stroke-width:4px
+    
+    xls_share[Хранилище файлов XLS / анализы]:::share
     edit([Читает результаты анализа пациентов]):::action
     doctor[Врач]:::entity
     doctor--"результаты анализов"--> edit--"результаты анализов"-->xls_share
@@ -135,6 +78,72 @@ flowchart LR
 flowchart LR
     classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
     classDef entity fill:#124221, stroke:#000, stroke-width:4px
+    classDef share fill:#FF7777 , stroke:#000, stroke-width:4px
+    pacient[Пациент]:::entity
+    admin[Администратор]:::entity
+    xls_share[Хранилище файлов XLS / journal.xls]:::share
+    register([Запись пациента к специалисту]):::action
+    get([Получает данные]):::action
+    pacient--"ПД"--> get--"ПД"--> admin --"ПД"--> register--"ПД"-->xls_share
+```
+
+```mermaid
+flowchart LR
+    classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
+    classDef entity fill:#124221, stroke:#000, stroke-width:4px
+    classDef share fill:#FF7777 , stroke:#000, stroke-width:4px
+    pacient[Пациент]:::entity
+    admin[Администратор]:::entity
+    xls_share[Хранилище файлов XLS / Patients]:::share
+    register([Регистрация пациента в системе]):::action
+    get([Получает данные]):::action
+    pacient--"ПД"--> get--"ПД"--> admin --"ПД"--> register--"ПД"-->xls_share
+```
+
+```mermaid
+flowchart LR
+    classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
+    classDef entity fill:#124221, stroke:#000, stroke-width:4px
+    classDef share fill:#FF7777 , stroke:#000, stroke-width:4px
+    pacient[Пациент]:::entity
+    admin[Администратор]:::entity    
+    scan([Сканирование]):::action
+    get([Получает данные]):::action
+    file_share[Хранилище отсканированных файлов]:::share
+    pacient--"Документы"--> get--"Документы"--> admin --"Документы"--> scan--"Отсканированные документы"-->file_share
+```
+
+```mermaid
+flowchart LR
+    classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
+    classDef entity fill:#124221, stroke:#000, stroke-width:4px
+    classDef share fill:#FF7777 , stroke:#000, stroke-width:4px
+    pacient[Пациент]:::entity
+    admin[Администратор]:::entity
+    xls_share[Хранилище файлов XLS]:::share
+    register([Регистрация в системе]):::action
+    get([Получает данные]):::action
+    pacient--"Доп.данные"--> get--"Доп.данные"--> admin --"Доп.данные"--> register--"Доп.данные"-->xls_share    
+```
+
+```mermaid
+flowchart LR
+    classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
+    classDef entity fill:#124221, stroke:#000, stroke-width:4px
+    classDef share fill:#FF7777 , stroke:#000, stroke-width:4px
+    pacient[Пациент]:::entity
+    doctor[Врач]:::entity
+    xls_share[Хранилище файлов XLS / Patients]:::share
+    consult([Приём у врача]):::action
+    register([Регистрация в системе]):::action
+    pacient--"Данные о здоровье"--> consult--"Данные о здоровье"--> doctor--"Данные о здоровье"--> register--"Данные о здоровье"-->xls_share
+```
+
+```mermaid
+flowchart LR
+    classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
+    classDef entity fill:#124221, stroke:#000, stroke-width:4px
+    classDef share fill:#FF7777 , stroke:#000, stroke-width:4px
 
     pacient[Пациент]:::entity
     1c_ent[1C бухгалтерия предприятия]:::entity
@@ -144,8 +153,11 @@ flowchart LR
     info([Информация о принятии денежных средств]):::action
     processing([Процессинг]):::action
     processing_acc([Процессинг платежей]):::action
+    processing_bank([Процессинг платежей]):::action
     hr_acc([Учёт кадров]):::action
     salary_acc([Выплата зарплаты]):::action
+    acc_tax([Налоговая отчётность]):::action
+    acc_handy([Обработка оказанных услуг]):::action
     1c_exchange([Внутриплатформенный обмен данными]):::action
     wh_in([Закупки оборудования]):::action
     wh_out([Списание ТМЦ]):::action
@@ -153,17 +165,22 @@ flowchart LR
     cashier[Кассир]:::entity
     bank[Банк]:::entity
     kkm[KKM]:::entity
-    xls_share[Хранилище файлов XLS / бухгалтерия]:::entity
+    tax_services[Налоговая]:::entity
+    xls_share[Хранилище файлов XLS / бухгалтерия]:::share
     accountant[Бухгалтер]:::entity
     wh_worker[Сотрудник склада]:::entity
     pacient-->pay-->cashier--> edit-->xls_share
     cashier-->processing-->kkm-->info-->1c_ent
     accountant-->processing_acc-->1c_ent
-    accountant-->hr_acc-->1c_ent
+    accountant--"Данные сотрудников"-->hr_acc-->1c_ent
     accountant-->salary_acc-->1c_ent
+    accountant-->acc_tax-->1c_ent
+    accountant-->acc_handy-->xls_share
     wh_worker-->wh_in-->1c_wh
     wh_worker-->wh_out-->1c_wh
     wh_worker-->wh_control-->1c_wh
     1c_wh-->1c_exchange-->1c_ent
+    kkm-->processing_bank-->bank
+    1c_ent-->tax_services
     
 ```
