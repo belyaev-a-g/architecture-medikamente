@@ -520,14 +520,16 @@ flowchart LR
 
 
     classDef restriction fill:#FFFFE0 , stroke:#000, stroke-width:4px
-    crypt[Шифрование данных]:::restriction    
-    limit[Получение ограниченного набора данных]:::restriction
+    crypt[Шифрование данных]:::restriction   
+    
     rbac[Разграничение прав доступа]:::restriction
     logging[Логгирование действий]:::restriction
     backup[Резервное копирование данных]:::restriction
     xls_share-->backup
-    1c_ent->crypt
-    1c_ent->backup
+    1c_ent-->backup
+    1c_wh-->backup
+    1c_ent-->crypt
+    1c_ent-->backup
     accountant-->logging
     wh_worker-->logging
     cashier-->logging
