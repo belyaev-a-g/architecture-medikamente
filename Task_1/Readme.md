@@ -221,3 +221,318 @@ flowchart LR
 * Человеческий фактор: ручные методы обработки повышают вероятность операционных сбоев.
 * Угроза безвозвратной потери: регулярное создание резервных копий (бэкапов) не настроено.
 
+
+### 3. Что можно улучшить
+#### Меры по обеспечению защиты информации:
+
+Для разных категорий данных применяются соответствующие механизмы защиты:
+
+- **Персональные данные (PII):** используются алгоритмы шифрования AES-256, защищённый канал TLS 1.3, а также процедура обезличивания при передаче в аналитические системы.
+- **Медицинские сведения (СПДн):** защищаются с помощью AES-256, ролевой модели доступа (RBAC) и маскировки чувствительных полей.
+- **Финансовая информация:** шифруется, а в журналах логирования подвергается обфускации (скрытию значимых частей).
+- **Пароли пользователей:** хранятся в захэшированном виде через bcrypt, для входа требуется многофакторная аутентификация (MFA).
+
+#### Механизм тегирования:
+
+Внедряется система тегов для автоматической категоризации информации:
+
+- `pii::personal::registration` — данные, относящиеся к регистрации физического лица;
+- `spdn::health::diagnosis` — сведения о диагнозах и состоянии здоровья;
+- `financial::contract::billing` — информация по договорам и биллингу.
+
+Присвоенные метки позволяют автоматизировать управление доступом и отслеживать использование данных в системах.
+
+#### Применяемые инструменты и технологии:
+
+В части инфраструктуры:
+- диски шифруются средствами BitLocker или LUKS;
+- все сетевые соединения работают по протоколу TLS 1.3;
+- для хранения секретов и ключей используется HashiCorp Vault.
+
+На уровне баз данных:
+- задействуется шифрование полей; (Если 1С использует PostgreSQL, то используем pgcrypto)
+- информация разносится по отдельным схемам;
+- события аудита собираются через Elasticsearch.
+
+В организационных процессах:
+- в CI/CD-конвейеры встроены сканеры уязвимостей (подход DevSecOps);
+- учёт согласий пациентов ведётся в CRM-системе;
+- организуется регулярное резервное копирование всех значимых массивов данных.
+
+#### Доработайте диаграммы из предыдущего шага: отобразите на них, что следует использовать на каждом этапе потока.
+Похоже, что использование mermaid для DFD было не лучшим решением, но попробую отрисовать на нём этот пункт.  
+
+
+```mermaid
+flowchart LR
+    classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
+    classDef entity fill:#00A86B, stroke:#000, stroke-width:4px
+    classDef share fill:#FF7777 , stroke:#000, stroke-width:4px
+    
+    pacient[Пациент]:::entity
+    admin[Администратор]:::entity
+    xls_share[Хранилище файлов XLS / journal.xls]:::share
+    register([Запись пациента к специалисту]):::action
+    get([Получает данные]):::action
+    pacient--"ПД"--> get--"ПД"--> admin --"ПД"--> register--"ПД"-->xls_share
+
+    classDef restriction fill:#FFFFE0 , stroke:#000, stroke-width:4px
+    crypt[Шифрование данных]:::restriction    
+    rbac[Разграничение прав доступа]:::restriction
+    limit[Получение ограниченного набора данных]:::restriction
+    logging[Логгирование действий]:::restriction
+    backup_copy[Резервное копирование данных]:::restriction
+    xls_share-->backup_copy
+    admin-->logging
+    xls_share-->logging
+    xls_share-->crypt
+    register-->limit
+    admin-->limit
+    
+    admin-->rbac
+    xls_share-->rbac
+```
+
+```mermaid
+flowchart LR
+    classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
+    classDef entity fill:#00A86B, stroke:#000, stroke-width:4px
+    classDef share fill:#FF7777 , stroke:#000, stroke-width:4px
+    pacient[Пациент]:::entity
+    admin[Администратор]:::entity
+    xls_share[Хранилище файлов XLS / Patients]:::share
+    register([Регистрация пациента в системе]):::action
+    get([Получает данные]):::action
+    pacient--"ПД"--> get--"ПД"--> admin --"ПД"--> register--"ПД"-->xls_share
+
+classDef restriction fill:#FFFFE0 , stroke:#000, stroke-width:4px
+crypt[Шифрование данных]:::restriction
+limit[Получение ограниченного набора данных]:::restriction
+rbac[Разграничение прав доступа]:::restriction
+logging[Логгирование действий]:::restriction
+backup[Резервное копирование данных]:::restriction
+xls_share-->backup
+admin-->logging
+xls_share-->logging
+xls_share-->crypt
+register-->limit
+admin-->limit
+xls_share-->rbac
+```
+
+```mermaid
+flowchart LR
+    classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
+    classDef entity fill:#00A86B, stroke:#000, stroke-width:4px
+    classDef share fill:#FF7777 , stroke:#000, stroke-width:4px
+    pacient[Пациент]:::entity
+    admin[Администратор]:::entity    
+    scan([Сканирование]):::action
+    get([Получает данные]):::action
+    file_share[Хранилище отсканированных файлов]:::share
+    pacient--"Документы"--> get--"Документы"--> admin --"Документы"--> scan--"Отсканированные документы"-->file_share
+
+classDef restriction fill:#FFFFE0 , stroke:#000, stroke-width:4px
+crypt[Шифрование данных]:::restriction
+limit[Получение ограниченного набора данных]:::restriction
+rbac[Разграничение прав доступа]:::restriction
+logging[Логгирование действий]:::restriction
+backup[Резервное копирование данных]:::restriction
+xls_share-->backup
+admin-->logging
+file_share-->logging
+file_share-->crypt
+admin-->limit
+file_share-->rbac
+```
+
+```mermaid
+flowchart LR
+    classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
+    classDef entity fill:#00A86B, stroke:#000, stroke-width:4px
+    classDef share fill:#FF7777 , stroke:#000, stroke-width:4px
+    pacient[Пациент]:::entity
+    admin[Администратор]:::entity
+    xls_share[Хранилище файлов XLS]:::share
+    register([Регистрация в системе]):::action
+    get([Получает данные]):::action
+    pacient--"Доп.данные"--> get--"Доп.данные"--> admin --"Доп.данные"--> register--"Доп.данные"-->xls_share
+
+classDef restriction fill:#FFFFE0 , stroke:#000, stroke-width:4px
+crypt[Шифрование данных]:::restriction
+limit[Получение ограниченного набора данных]:::restriction
+rbac[Разграничение прав доступа]:::restriction
+logging[Логгирование действий]:::restriction
+backup[Резервное копирование данных]:::restriction
+xls_share-->backup
+admin-->logging
+xls_share-->logging
+xls_share-->crypt
+admin-->limit
+xls_share-->rbac
+```
+
+```mermaid
+flowchart LR
+    classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
+    classDef entity fill:#00A86B, stroke:#000, stroke-width:4px
+    classDef share fill:#FF7777 , stroke:#000, stroke-width:4px
+    
+    xls_share[Хранилище файлов XLS / journal.xls]:::share
+    edit([Сохраняет результаты анализа пациентов]):::action
+    doctor[Лаборант]:::entity    
+    doctor--"результаты анализов"--> edit--"результаты анализов"--> xls_share
+
+classDef restriction fill:#FFFFE0 , stroke:#000, stroke-width:4px
+crypt[Шифрование данных]:::restriction
+limit[Получение ограниченного набора данных]:::restriction
+rbac[Разграничение прав доступа]:::restriction
+logging[Логгирование действий]:::restriction
+backup[Резервное копирование данных]:::restriction
+xls_share-->backup
+doctor-->logging
+xls_share-->logging
+xls_share-->crypt
+doctor-->limit
+xls_share-->rbac
+```
+
+```mermaid
+flowchart LR
+    classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
+    classDef entity fill:#00A86B, stroke:#000, stroke-width:4px
+    classDef share fill:#FF7777 , stroke:#000, stroke-width:4px
+    
+    xls_share[Хранилище файлов XLS / journal.xls]:::share
+    edit([Просмотр и редактирование своего жунала]):::action
+    doctor[Врач]:::entity    
+    doctor--"ПД"--> edit--"ПД"--> xls_share
+
+classDef restriction fill:#FFFFE0 , stroke:#000, stroke-width:4px
+crypt[Шифрование данных]:::restriction
+limit[Получение ограниченного набора данных]:::restriction
+rbac[Разграничение прав доступа]:::restriction
+logging[Логгирование действий]:::restriction
+doctor-->logging
+backup[Резервное копирование данных]:::restriction
+xls_share-->backup
+xls_share-->logging
+xls_share-->crypt
+doctor-->limit
+xls_share-->rbac
+```
+
+```mermaid
+flowchart LR
+    classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
+    classDef entity fill:#00A86B, stroke:#000, stroke-width:4px
+    classDef share fill:#FF7777 , stroke:#000, stroke-width:4px
+    
+    xls_share[Хранилище файлов XLS / анализы]:::share
+    edit([Читает результаты анализа пациентов]):::action
+    doctor[Врач]:::entity
+    doctor--"результаты анализов"--> edit--"результаты анализов"-->xls_share
+
+
+classDef restriction fill:#FFFFE0 , stroke:#000, stroke-width:4px
+crypt[Шифрование данных]:::restriction
+limit[Получение ограниченного набора данных]:::restriction
+rbac[Разграничение прав доступа]:::restriction
+logging[Логгирование действий]:::restriction
+backup[Резервное копирование данных]:::restriction
+xls_share-->backup
+doctor-->logging
+xls_share-->logging
+xls_share-->crypt
+doctor-->limit
+xls_share-->rbac    
+```
+
+```mermaid
+flowchart LR
+    classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
+    classDef entity fill:#00A86B, stroke:#000, stroke-width:4px
+    classDef share fill:#FF7777 , stroke:#000, stroke-width:4px
+    pacient[Пациент]:::entity
+    doctor[Врач]:::entity
+    xls_share[Хранилище файлов XLS / Patients]:::share
+    consult([Приём у врача]):::action
+    register([Регистрация в системе]):::action
+    pacient--"Данные о здоровье"--> consult--"Данные о здоровье"--> doctor--"Данные о здоровье"--> register--"Данные о здоровье"-->xls_share
+
+classDef restriction fill:#FFFFE0 , stroke:#000, stroke-width:4px
+crypt[Шифрование данных]:::restriction
+limit[Получение ограниченного набора данных]:::restriction
+rbac[Разграничение прав доступа]:::restriction
+logging[Логгирование действий]:::restriction
+backup[Резервное копирование данных]:::restriction
+xls_share-->backup
+doctor-->logging
+xls_share-->logging
+xls_share-->crypt
+doctor-->limit
+xls_share-->rbac
+```
+
+```mermaid
+flowchart LR
+    classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
+    classDef entity fill:#00A86B, stroke:#000, stroke-width:4px
+    classDef share fill:#FF7777 , stroke:#000, stroke-width:4px
+
+    pacient[Пациент]:::entity
+    1c_ent[1C бухгалтерия предприятия]:::entity
+    1c_wh[1C Торговля и склад]:::entity
+    edit([Учёт в Excel]):::action
+    pay([Оплата за медицинские услуги]):::action
+    info([Информация о принятии денежных средств]):::action
+    processing([Процессинг]):::action
+    processing_acc([Процессинг платежей]):::action
+    processing_bank([Процессинг платежей]):::action
+    hr_acc([Учёт кадров]):::action
+    salary_acc([Выплата зарплаты]):::action
+    acc_tax([Налоговая отчётность]):::action
+    acc_handy([Обработка оказанных услуг]):::action
+    1c_exchange([Внутриплатформенный обмен данными]):::action
+    wh_in([Закупки оборудования]):::action
+    wh_out([Списание ТМЦ]):::action
+    wh_control([Учёт ТМЦ]):::action
+    cashier[Кассир]:::entity
+    bank[Банк]:::entity
+    kkm[KKM]:::entity
+    tax_services[Налоговая]:::entity
+    xls_share[Хранилище файлов XLS / бухгалтерия]:::share
+    accountant[Бухгалтер]:::entity
+    wh_worker[Сотрудник склада]:::entity
+    pacient-->pay-->cashier--> edit-->xls_share
+    cashier-->processing-->kkm-->info-->1c_ent
+    accountant-->processing_acc-->1c_ent
+    accountant--"Данные сотрудников"-->hr_acc-->1c_ent
+    accountant-->salary_acc-->1c_ent
+    accountant-->acc_tax-->1c_ent
+    accountant-->acc_handy<-->xls_share
+    wh_worker-->wh_in-->1c_wh
+    wh_worker-->wh_out-->1c_wh
+    wh_worker-->wh_control-->1c_wh
+    1c_wh-->1c_exchange-->1c_ent
+    kkm-->processing_bank-->bank
+    1c_ent-->tax_services
+
+
+    classDef restriction fill:#FFFFE0 , stroke:#000, stroke-width:4px
+    crypt[Шифрование данных]:::restriction    
+    limit[Получение ограниченного набора данных]:::restriction
+    rbac[Разграничение прав доступа]:::restriction
+    logging[Логгирование действий]:::restriction
+    backup[Резервное копирование данных]:::restriction
+    xls_share-->backup
+    1c_ent->crypt
+    1c_ent->backup
+    accountant-->logging
+    wh_worker-->logging
+    cashier-->logging
+    xls_share-->logging    
+    xls_share-->crypt    
+    xls_share-->rbac
+    1c_exchange-->crypt
+```
