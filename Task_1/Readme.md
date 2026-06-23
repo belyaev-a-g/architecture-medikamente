@@ -41,7 +41,7 @@
 ```mermaid
 flowchart LR
     classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
-    classDef entity fill:#124221, stroke:#000, stroke-width:4px
+    classDef entity fill:#00A86B, stroke:#000, stroke-width:4px
     classDef share fill:#FF7777 , stroke:#000, stroke-width:4px
     pacient[Пациент]:::entity
     admin[Администратор]:::entity
@@ -54,7 +54,7 @@ flowchart LR
 ```mermaid
 flowchart LR
     classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
-    classDef entity fill:#124221, stroke:#000, stroke-width:4px
+    classDef entity fill:#00A86B, stroke:#000, stroke-width:4px
     classDef share fill:#FF7777 , stroke:#000, stroke-width:4px
     pacient[Пациент]:::entity
     admin[Администратор]:::entity
@@ -67,7 +67,7 @@ flowchart LR
 ```mermaid
 flowchart LR
     classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
-    classDef entity fill:#124221, stroke:#000, stroke-width:4px
+    classDef entity fill:#00A86B, stroke:#000, stroke-width:4px
     classDef share fill:#FF7777 , stroke:#000, stroke-width:4px
     pacient[Пациент]:::entity
     admin[Администратор]:::entity    
@@ -80,7 +80,7 @@ flowchart LR
 ```mermaid
 flowchart LR
     classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
-    classDef entity fill:#124221, stroke:#000, stroke-width:4px
+    classDef entity fill:#00A86B, stroke:#000, stroke-width:4px
     classDef share fill:#FF7777 , stroke:#000, stroke-width:4px
     pacient[Пациент]:::entity
     admin[Администратор]:::entity
@@ -93,7 +93,7 @@ flowchart LR
 ```mermaid
 flowchart LR
     classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
-    classDef entity fill:#124221, stroke:#000, stroke-width:4px
+    classDef entity fill:#00A86B, stroke:#000, stroke-width:4px
     classDef share fill:#FF7777 , stroke:#000, stroke-width:4px
     
     xls_share[Хранилище файлов XLS / journal.xls]:::share
@@ -105,7 +105,7 @@ flowchart LR
 ```mermaid
 flowchart LR
     classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
-    classDef entity fill:#124221, stroke:#000, stroke-width:4px
+    classDef entity fill:#00A86B, stroke:#000, stroke-width:4px
     classDef share fill:#FF7777 , stroke:#000, stroke-width:4px
     
     xls_share[Хранилище файлов XLS / journal.xls]:::share
@@ -117,7 +117,7 @@ flowchart LR
 ```mermaid
 flowchart LR
     classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
-    classDef entity fill:#124221, stroke:#000, stroke-width:4px
+    classDef entity fill:#00A86B, stroke:#000, stroke-width:4px
     classDef share fill:#FF7777 , stroke:#000, stroke-width:4px
     
     xls_share[Хранилище файлов XLS / анализы]:::share
@@ -129,7 +129,7 @@ flowchart LR
 ```mermaid
 flowchart LR
     classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
-    classDef entity fill:#124221, stroke:#000, stroke-width:4px
+    classDef entity fill:#00A86B, stroke:#000, stroke-width:4px
     classDef share fill:#FF7777 , stroke:#000, stroke-width:4px
     pacient[Пациент]:::entity
     doctor[Врач]:::entity
@@ -142,7 +142,7 @@ flowchart LR
 ```mermaid
 flowchart LR
     classDef action fill:#7F5FD4, stroke:#000, stroke-width:4px
-    classDef entity fill:#124221, stroke:#000, stroke-width:4px
+    classDef entity fill:#00A86B, stroke:#000, stroke-width:4px
     classDef share fill:#FF7777 , stroke:#000, stroke-width:4px
 
     pacient[Пациент]:::entity
